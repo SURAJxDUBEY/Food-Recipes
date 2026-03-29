@@ -7,27 +7,26 @@ Recipe app: `index.html` (UI) + FastAPI (`server.py`) + `api/*.py` (Vercel).
 ```
 .
 ├── api/
-│   ├── index.py
+│   ├── health.py      # /api/health (uptime JSON)
 │   ├── ingredients.py
 │   ├── recipes.py
 │   └── search.py
-├── index.html        # main UI — Vercel serves this at /
+├── index.html         # main UI — open this at / on Vercel
 ├── server.py
 ├── requirements.txt
+├── vercel.json
 ```
 
-`vercel.json` rewrites `/` → `/index.html` so the homepage is always your UI.
+There is **no** `api/index.py` on purpose: a FastAPI `GET /` JSON response was being served at your **homepage** `/` on Vercel. The UI must be `index.html` at `/`.
 
-### Open the website (not the API)
+### Open the website
 
-In the browser address bar use **only**:
+Use **only** the site root (no `/api`):
 
 `https://YOUR-PROJECT.vercel.app/`
 
-- **Do not** open `https://…vercel.app/api` — that URL shows **JSON** from the API (normal).
-- If you see JSON with `"LeftoverChef API"`, delete **`/api`** from the URL and press Enter.
-
-Do **not** use random casing (`FrontEnd.html`) — Linux/Vercel are case-sensitive.
+- **API check:** `https://…vercel.app/api/health` → `{"ok":true,...}`
+- **Ingredients:** `https://…vercel.app/api/ingredients`
 
 ## Local run
 
@@ -36,7 +35,7 @@ pip install -r requirements.txt
 uvicorn server:app --reload --port 8000
 ```
 
-Open `index.html` in a browser (or Live Server). API: `http://127.0.0.1:8000`.
+Open `index.html` in a browser (or Live Server). API: `http://127.0.0.1:8000` (health: `/api/health`).
 
 ## Git & Vercel
 
@@ -46,11 +45,6 @@ git commit -m "Deploy LeftoverChef"
 git push
 ```
 
-Import the repo on [Vercel](https://vercel.com), default settings, deploy.
-
-If you ever see **“Due to `builds` existing…”**: your repo or an old deploy still had a `vercel.json` with `"builds"`. This project should **not** use that. Remove `builds` from `vercel.json` or delete `vercel.json` (this layout works without it).
-
 ## Troubleshooting
 
-- `404 NOT_FOUND`: ensure all `api/*.py` files are pushed; test `https://YOUR_SITE.vercel.app/api/ingredients` in the browser.
 - [Vercel NOT_FOUND](https://vercel.com/docs/errors/NOT_FOUND)

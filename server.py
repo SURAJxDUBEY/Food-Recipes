@@ -10,6 +10,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
+import os
 import sqlite3, json
 
 app = FastAPI(title="LeftoverChef API")
@@ -21,7 +22,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-DB_PATH = "recipes.db"
+# Vercel serverless filesystem is read-only except /tmp — SQLite must live there.
+DB_PATH = "/tmp/recipes.db" if os.environ.get("VERCEL") else "recipes.db"
 
 # ── DATABASE ──────────────────────────────────────────────────────────────────
 

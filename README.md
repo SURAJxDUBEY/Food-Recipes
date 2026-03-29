@@ -16,7 +16,16 @@ Recipe app: `index.html` (UI) + FastAPI (`server.py`) + `api/*.py` (Vercel).
 ├── requirements.txt
 ```
 
-No `vercel.json` is required: Vercel serves `index.html` at `/` and Python files under `api/` as `/api/...`.
+`vercel.json` rewrites `/` → `/index.html` so the homepage is always your UI.
+
+### Open the website (not the API)
+
+In the browser address bar use **only**:
+
+`https://YOUR-PROJECT.vercel.app/`
+
+- **Do not** open `https://…vercel.app/api` — that URL shows **JSON** from the API (normal).
+- If you see JSON with `"LeftoverChef API"`, delete **`/api`** from the URL and press Enter.
 
 Do **not** use random casing (`FrontEnd.html`) — Linux/Vercel are case-sensitive.
 

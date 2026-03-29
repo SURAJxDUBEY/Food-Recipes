@@ -1,20 +1,24 @@
 # LeftoverChef
 
-Recipe search app: `frontend.html` + FastAPI (`server.py`).
+Recipe app: `index.html` (UI) + FastAPI (`server.py`) + `api/*.py` (Vercel).
 
-## Repo layout (use these exact names)
+## Repo layout (exact names)
 
 ```
 .
 ├── api/
-│   └── index.py      # Vercel serverless entry (imports server:app)
-├── frontend.html     # UI (lowercase)
-├── server.py         # API + SQLite + seed data
+│   ├── index.py
+│   ├── ingredients.py
+│   ├── recipes.py
+│   └── search.py
+├── index.html        # main UI — Vercel serves this at /
+├── server.py
 ├── requirements.txt
-└── vercel.json
 ```
 
-Do **not** rename `frontend.html` to `FrontEnd.html` — Linux and Vercel are case-sensitive.
+No `vercel.json` is required: Vercel serves `index.html` at `/` and Python files under `api/` as `/api/...`.
+
+Do **not** use random casing (`FrontEnd.html`) — Linux/Vercel are case-sensitive.
 
 ## Local run
 
@@ -23,44 +27,21 @@ pip install -r requirements.txt
 uvicorn server:app --reload --port 8000
 ```
 
-Open `frontend.html` in a browser (or use Live Server). API: `http://localhost:8000`.
+Open `index.html` in a browser (or Live Server). API: `http://127.0.0.1:8000`.
 
-## Git
+## Git & Vercel
 
 ```bash
-git init
 git add .
-git commit -m "Initial LeftoverChef"
+git commit -m "Deploy LeftoverChef"
+git push
 ```
 
-Create a repo on GitHub, then:
+Import the repo on [Vercel](https://vercel.com), default settings, deploy.
 
-```bash
-git remote add origin <your-repo-url>
-git branch -M main
-git push -u origin main
-```
+If you ever see **“Due to `builds` existing…”**: your repo or an old deploy still had a `vercel.json` with `"builds"`. This project should **not** use that. Remove `builds` from `vercel.json` or delete `vercel.json` (this layout works without it).
 
-## Vercel (recommended: connect GitHub)
+## Troubleshooting
 
-1. Import the GitHub repo in [Vercel](https://vercel.com).
-2. Leave defaults; root directory = repo root.
-3. Deploy.
-
-Or CLI from this folder:
-
-```bash
-npm i -g vercel
-vercel login
-vercel --prod
-```
-
-After deploy, open your site URL; API calls go to `/api/*` (see `frontend.html`).
-
-## Troubleshooting `404 NOT_FOUND`
-
-- Confirm `api/index.py` exists in the repo (folder `api`, file `index.py`).
-- Confirm `vercel.json` is committed.
-- Redeploy after fixing file names.
-
-See: [Vercel NOT_FOUND](https://vercel.com/docs/errors/NOT_FOUND)
+- `404 NOT_FOUND`: ensure all `api/*.py` files are pushed; test `https://YOUR_SITE.vercel.app/api/ingredients` in the browser.
+- [Vercel NOT_FOUND](https://vercel.com/docs/errors/NOT_FOUND)

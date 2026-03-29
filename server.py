@@ -315,7 +315,10 @@ def match_recipes(user_ingredients: List[str]):
 
 @app.get("/")
 def root():
-    return {"status": "LeftoverChef API running 🍳"}
+    return {
+        "status": "LeftoverChef API running 🍳",
+        "hint": "This JSON is the API root. Open the same domain at / (homepage) for the website — not /api.",
+    }
 
 @app.get("/recipes")
 @app.get("/api/recipes")

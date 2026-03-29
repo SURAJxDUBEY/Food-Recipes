@@ -261,9 +261,16 @@
 <footer>🍴 LeftoverChef &nbsp;·&nbsp; Cook smart, waste less &nbsp;·&nbsp; FastAPI + SQLite backend</footer>
 
 <script>
-  const API = (location.hostname === "localhost" || location.hostname === "127.0.0.1")
-    ? "http://localhost:8000"
-    : `${location.origin}/api`;
+  // Local dev: use uvicorn on :8000. Opening this file via file:// has no hostname — old logic broke fetch.
+  function apiBase() {
+    const p = location.protocol;
+    const h = location.hostname;
+    if (p === "file:" || h === "" || h === "localhost" || h === "127.0.0.1") {
+      return "http://127.0.0.1:8000";
+    }
+    return `${location.origin}/api`;
+  }
+  const API = apiBase();
   let ingredients = [];
   let allKnownIngredients = [];
 

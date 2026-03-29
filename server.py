@@ -6,8 +6,9 @@ Install: pip install fastapi uvicorn
 Run: uvicorn server:app --reload --port 8000
 """
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 from typing import List
 import os
@@ -314,11 +315,13 @@ def match_recipes(user_ingredients: List[str]):
 # ── ROUTES ────────────────────────────────────────────────────────────────────
 
 @app.get("/")
-def root():
-    return {
-        "status": "LeftoverChef API running 🍳",
-        "hint": "This JSON is the API root. Open the same domain at / (homepage) for the website — not /api.",
-    }
+def root(request: Request):
+    # On Vercel, people often open /api in the browser and see JSON. Send them to the real site.
+    # Do not redirect on local uvicorn (same URL / would loop).
+    accept = request.headers.get("accept", "")
+    if os.environ.get("VERCEL") and "text/html" in accept:
+        return RedirectResponse(url="/", status_code=302)
+    return {"status": "LeftoverChef API running 🍳"}
 
 @app.get("/recipes")
 @app.get("/api/recipes")

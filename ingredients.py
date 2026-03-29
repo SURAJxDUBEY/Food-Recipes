@@ -1,2 +1,9 @@
-"""Vercel: one file per URL path — /api/ingredients → this module."""
-from server import app
+"""Vercel: /api/ingredients — project root must be on sys.path for `import server`."""
+import sys
+from pathlib import Path
+
+_root = Path(__file__).resolve().parent.parent
+if str(_root) not in sys.path:
+    sys.path.insert(0, str(_root))
+
+from server import app  # noqa: E402

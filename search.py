@@ -1,3 +1,9 @@
-"""Vercel: /api/search (POST) → this module."""
-from server import app
+"""Vercel: /api/search (POST)"""
+import sys
+from pathlib import Path
 
+_root = Path(__file__).resolve().parent.parent
+if str(_root) not in sys.path:
+    sys.path.insert(0, str(_root))
+
+from server import app  # noqa: E402

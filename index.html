@@ -261,13 +261,14 @@
 <footer>🍴 LeftoverChef &nbsp;·&nbsp; Cook smart, waste less &nbsp;·&nbsp; FastAPI + SQLite backend</footer>
 
 <script>
-  // Local dev: use uvicorn on :8000. Opening this file via file:// has no hostname — old logic broke fetch.
+  // Local: uvicorn on :8000. Production (e.g. *.vercel.app): same-origin /api (do NOT use empty hostname → localhost; that breaks deploys).
   function apiBase() {
+    const q = new URLSearchParams(location.search).get("api");
+    if (q) return q.replace(/\/$/, "");
     const p = location.protocol;
     const h = location.hostname;
-    if (p === "file:" || h === "" || h === "localhost" || h === "127.0.0.1") {
-      return "http://127.0.0.1:8000";
-    }
+    if (p === "file:") return "http://127.0.0.1:8000";
+    if (h === "localhost" || h === "127.0.0.1" || h === "[::1]") return "http://127.0.0.1:8000";
     return `${location.origin}/api`;
   }
   const API = apiBase();

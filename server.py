@@ -313,9 +313,10 @@ def match_recipes(user_ingredients: List[str]):
 
 # ── ROUTES ────────────────────────────────────────────────────────────────────
 
-@app.get("/")
-def root():
-    return {"status": "LeftoverChef API running 🍳"}
+@app.get("/api/health")
+def api_health():
+    """Use this for uptime checks — do not use GET / (confuses Vercel static / vs API)."""
+    return {"ok": True, "service": "LeftoverChef API"}
 
 @app.get("/recipes")
 @app.get("/api/recipes")

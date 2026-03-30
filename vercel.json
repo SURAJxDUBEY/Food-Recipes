@@ -5,6 +5,14 @@
   ],
   "routes": [
     { "src": "/static/(.*)", "dest": "/static/$1" },
-    { "src": "/(.*)",        "dest": "wsgi.py" }
+    { "src": "/(.*)",        {
+  "version": 2,
+  "builds": [
+    { "src": "app.py", "use": "@vercel/python" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "app.py" }
+  ]
+}"dest": "wsgi.py" }
   ]
 }

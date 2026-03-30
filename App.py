@@ -368,6 +368,8 @@ def all_ingredients():
 
 # ── Entry point ───────────────────────────────────────────────────────────────
 
+# Always initialise the DB (required for Vercel cold starts)
+init_db()
+
 if __name__ == "__main__":
-    init_db()
     app.run(debug=True, port=5000)
